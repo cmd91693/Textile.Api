@@ -10,6 +10,10 @@ namespace Textile.Api.Data
         {
         }
 
+        public DbSet<User> Users { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+        public DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
+        public DbSet<UserOtp> UserOtps { get; set; }
         public DbSet<Product> Products { get; set; }
     }
 }
