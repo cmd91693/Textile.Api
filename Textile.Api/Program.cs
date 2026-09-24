@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using System.Text;
 using Textile.Api.Data;
 using Textile.Api.Models;
@@ -55,34 +56,54 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 
+//builder.Services.AddSwaggerGen(options =>
+//{
+//    options.AddSecurityDefinition("Bearer",
+//        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+//        {
+//            Name = "Authorization",
+//            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+//            Scheme = "Bearer",
+//            BearerFormat = "JWT",
+//            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+//            Description = "Enter JWT token like: Bearer {your token}"
+//        });
+
+//    options.AddSecurityRequirement(
+//        new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+//        {
+//            {
+//                new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+//                {
+//                    Reference =
+//                        new Microsoft.OpenApi.Models.OpenApiReference
+//                        {
+//                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+//                            Id = "Bearer"
+//                        }
+//                },
+//                Array.Empty<string>()
+//            }
+//        });
+//});
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer",
-        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        new OpenApiSecurityScheme
         {
             Name = "Authorization",
-            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-            Scheme = "Bearer",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
             BearerFormat = "JWT",
-            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+            In = ParameterLocation.Header,
             Description = "Enter JWT token like: Bearer {your token}"
         });
 
-    options.AddSecurityRequirement(
-        new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    options.AddSecurityRequirement(document =>
+        new OpenApiSecurityRequirement
         {
-            {
-                new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-                {
-                    Reference =
-                        new Microsoft.OpenApi.Models.OpenApiReference
-                        {
-                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                },
-                Array.Empty<string>()
-            }
+            [new OpenApiSecuritySchemeReference("Bearer", document)] = []
         });
 });
 
